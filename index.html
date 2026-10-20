@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cleaning Checklist</title>
+<meta name="description" content="Job-site cleaning checklist.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#2a4657">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Checklist">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preload" href="fonts/atkinson-hyperlegible-next.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+  // Apply the saved theme before first paint. Light is the default.
+  try { if (localStorage.getItem('checklist-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("fonts/atkinson-hyperlegible-next.woff2") format("woff2");
+    font-weight: 200 800;
+    font-display: swap;
+  }
+
+  /* Colors: IU13 slate blues and crimson, with green meaning "done" everywhere. */
+  :root {
+    --bg: #eeeceb;
+    --card: #ffffff;
+    --card-border: #d6d0cc;
+    --ledge: #c9c2bd;
+    --ink: #1d2b35;
+    --muted: #5a6872;
+    --head: #2a4657;
+    --head-ink: #ffffff;
+    --head-soft: rgba(255,255,255,.16);
+    --slate: #50748a;
+    --crimson: #a41e35;
+    --stripe: #a41e35;
+    --crimson-bg: #fbecee;
+    --done: #1d8556;
+    --done-ink: #146343;
+    --done-bg: #e5f4ec;
+    --done-border: #7fc7a2;
+    --done-ledge: #5fae86;
+    --on-done: #ffffff;
+    --bar: #7ee2ad;
+    --pill: #e1e8ed;
+    --ring: #50748a;
+  }
+  :root[data-theme="dark"] {
+    --bg: #11191f;
+    --card: #1b2730;
+    --card-border: #2c3b46;
+    --ledge: #0a1014;
+    --ink: #edf2f5;
+    --muted: #a3b4bf;
+    --head: #0d151a;
+    --head-ink: #edf2f5;
+    --head-soft: rgba(255,255,255,.1);
+    --slate: #8fb2c7;
+    --crimson: #ff7a8e;
+    --stripe: #c42a44;
+    --crimson-bg: #2e1a1f;
+    --done: #3ecf8a;
+    --done-ink: #6fe0a8;
+    --done-bg: #14302a;
+    --done-border: #2f7a59;
+    --done-ledge: #0b1f19;
+    --on-done: #08251a;
+    --bar: #3ecf8a;
+    --pill: #26343e;
+    --ring: #8fb2c7;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 20px/1.35 "Atkinson Hyperlegible Next", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font: inherit; color: inherit; }
+  svg { display: block; }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--head); color: var(--head-ink);
+    border-top: 5px solid var(--stripe);
+    padding: calc(12px + env(safe-area-inset-top)) 16px 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .row { display: flex; align-items: center; gap: 12px; }
+  h1 { flex: 1; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: .01em; }
+  .icon-btn {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--head-soft); border: 0; cursor: pointer; color: var(--head-ink);
+  }
+  .icon-btn svg { width: 24px; height: 24px; }
+  .score { flex: 1; display: flex; align-items: baseline; gap: 8px; font-variant-numeric: tabular-nums; }
+  .score b { font-size: 40px; line-height: 1; font-weight: 800; }
+  .score span { font-size: 18px; opacity: .85; white-space: nowrap; }
+  .progress-row { margin-top: 10px; }
+  #next {
+    flex: none; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+    min-height: 48px; padding: 0 18px; border-radius: 999px;
+    background: #ffffff; color: #2a4657; border: 0;
+    font-size: 18px; font-weight: 800; cursor: pointer;
+    box-shadow: 0 3px 0 rgba(0,0,0,.25);
+  }
+  #next:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
+  #next svg { width: 20px; height: 20px; }
+  #next[hidden] { display: none; }
+  .progress {
+    height: 16px; margin-top: 12px; border-radius: 99px;
+    background: var(--head-soft); overflow: hidden;
+  }
+  .progress > div {
+    height: 100%; width: 0; min-width: 0; border-radius: inherit;
+    background: var(--bar); transition: width .3s ease;
+  }
+
+  /* ---------- List ---------- */
+  main { padding: 8px 16px calc(40px + env(safe-area-inset-bottom)); }
+
+  .alldone {
+    display: none; align-items: center; gap: 14px;
+    margin: 16px 0 4px; padding: 18px;
+    background: var(--done-bg); color: var(--done-ink);
+    border: 2px solid var(--done-border); border-radius: 18px;
+    font-size: 22px; font-weight: 800;
+  }
+  .alldone svg { flex: none; width: 40px; height: 40px; }
+  body.complete .alldone { display: flex; }
+
+  .area { margin-top: 26px; scroll-margin-top: 190px; }
+  .area-head { display: flex; align-items: center; gap: 12px; margin: 0 2px 10px; }
+  .area-head h2 { flex: 1; margin: 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
+  .tally {
+    flex: none; display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--pill); color: var(--muted);
+    font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+  .tally svg { width: 16px; height: 16px; display: none; }
+  .area.done .tally { background: var(--done); color: var(--on-done); }
+  .area.done .tally svg { display: block; }
+  .area-note {
+    display: flex; gap: 8px; align-items: flex-start;
+    margin: -2px 2px 12px; font-size: 17px; color: var(--muted);
+  }
+  .area-note svg { flex: none; width: 20px; height: 20px; margin-top: 1px; color: var(--slate); }
+
+  .items { display: grid; gap: 12px; }
+  label.item {
+    position: relative;
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px; min-height: 76px;
+    background: var(--card);
+    border: 2px solid var(--card-border); border-radius: 18px;
+    box-shadow: 0 4px 0 var(--ledge);
+    cursor: pointer;
+    scroll-margin-top: 200px;
+    -webkit-user-select: none; user-select: none;
+    transition: background .15s, border-color .15s, box-shadow .1s, transform .1s;
+  }
+  label.item:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ledge); }
+  label.item input { position: absolute; opacity: 0; pointer-events: none; }
+  .box {
+    flex: none; width: 44px; height: 44px; margin-top: -4px;
+    display: grid; place-items: center;
+    border: 3px solid var(--slate); border-radius: 12px;
+    background: var(--card);
+    transition: background .15s, border-color .15s;
+  }
+  .box svg { width: 28px; height: 28px; opacity: 0; color: var(--on-done); }
+  .text { flex: 1; padding-top: 4px; font-weight: 600; }
+  .note { display: block; margin-top: 4px; font-size: 17px; font-weight: 400; color: var(--muted); }
+  .when { display: none; margin-top: 6px; font-size: 15px; font-weight: 800; color: var(--done-ink); }
+
+  label.item.is-done {
+    background: var(--done-bg); border-color: var(--done-border);
+    box-shadow: 0 4px 0 var(--done-ledge);
+  }
+  label.item.is-done:active { box-shadow: 0 1px 0 var(--done-ledge); }
+  input:checked + .box { background: var(--done); border-color: var(--done); }
+  input:checked + .box svg { opacity: 1; }
+  label.item.pop .box svg { animation: pop .25s ease-out; }
+  input:checked ~ .text .when { display: block; }
+  input:focus-visible + .box { outline: 3px solid var(--ring); outline-offset: 3px; }
+  @keyframes pop { 0% { transform: scale(.4); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+  /* "Next" lands here: a calm ring, no blinking. */
+  label.item.target { animation: ring 1.8s ease-out; }
+  @keyframes ring {
+    0%, 55% { box-shadow: 0 0 0 5px var(--ring), 0 4px 0 var(--ledge); }
+    100% { box-shadow: 0 0 0 0 transparent, 0 4px 0 var(--ledge); }
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 12px; margin: 36px 0 0;
+    color: var(--muted); font-size: 16px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 3px; border-radius: 3px; background: var(--card-border); }
+  .divider span { padding: 8px 16px; border-radius: 999px; background: var(--pill); }
+
+  /* ---------- Clear ---------- */
+  .clear-wrap { margin-top: 48px; padding-top: 24px; border-top: 3px dashed var(--card-border); text-align: center; }
+  .clear-wrap h3 { margin: 0 0 12px; font-size: 18px; color: var(--muted); font-weight: 800; }
+  #clear {
+    position: relative; overflow: hidden; width: 100%;
+    min-height: 68px; padding: 18px 16px; border-radius: 18px;
+    font-size: 20px; font-weight: 800;
+    color: var(--crimson); background: var(--crimson-bg);
+    border: 3px solid var(--crimson);
+    cursor: pointer;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  }
+  #clear::before {
+    content: ""; position: absolute; inset: 0;
+    background: var(--crimson); opacity: .28;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .2s ease-out;
+  }
+  #clear.holding::before { transform: scaleX(1); transition: transform var(--hold, 2s) linear; }
+  #clear span { position: relative; }
+  #clear:disabled { opacity: .4; cursor: default; }
+  .hint { margin: 10px 0 0; min-height: 1.4em; font-size: 16px; color: var(--muted); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 20;
+    display: flex; align-items: center; gap: 16px;
+    max-width: calc(100% - 32px); padding: 12px 12px 12px 20px;
+    background: #1d2b35; color: #fff; border-radius: 16px;
+    font-size: 18px; box-shadow: 0 8px 28px rgba(0,0,0,.3);
+    transform: translate(-50%, 160%); transition: transform .25s ease;
+  }
+  .toast.show { transform: translate(-50%, 0); }
+  .toast button {
+    min-height: 44px; padding: 8px 14px; border: 0; border-radius: 10px;
+    background: #ffffff; color: #1d2b35; font-weight: 800; cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before { transition-duration: 0s !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="row">
+      <h1>Cleaning Checklist</h1>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to dark mode">
+        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
+      </button>
+    </div>
+    <div class="row progress-row">
+      <div class="score" aria-live="polite"><b id="done-count">0</b><span id="done-label">of 0 done</span></div>
+      <button id="next" type="button">Next task
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="progress" aria-hidden="true"><div id="progress"></div></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="alldone" role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+    <span>All done. Great work today!</span>
+  </div>
+  <div id="list"></div>
+
+  <div class="clear-wrap">
+    <h3>Starting a new shift?</h3>
+    <button id="clear" type="button"><span id="clear-label">Hold to clear all</span></button>
+    <p class="hint" id="hint" aria-live="polite"></p>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span>Checklist cleared.</span>
+  <button id="undo" type="button">Undo</button>
+</div>
+
+<script src="checklist.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
