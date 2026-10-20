@@ -1,6 +1,6 @@
 // Offline support: keeps a copy of the app on the phone so it works with no signal.
 // Bump VERSION whenever any file changes so phones drop the old copy.
-const VERSION = 'v5';
+const VERSION = 'v6';
 const CACHE = `surestay-checklist-${VERSION}`;
 const FILES = [
   './',
@@ -13,7 +13,9 @@ const FILES = [
   'icons/icon-192.png',
   'icons/icon-512.png',
   'icons/apple-touch-icon.png',
+  'icons/icon-maskable-192.png',
   'icons/icon-maskable-512.png',
+  'icons/favicon-32.png',
 ];
 
 self.addEventListener('install', (e) => {
